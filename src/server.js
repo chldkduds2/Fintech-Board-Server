@@ -1,19 +1,17 @@
-require("dotenv").config(); // .env 파일에서 환경 변수 로드
+require("dotenv").config(); 
 const express = require("express");
 const path = require("path");
 const multer = require("multer");
-const cors = require("cors"); // CORS 패키지 추가
-const postRoutes = require("../routes/postRoutes"); // POST 요청 라우터
-const getPostRoutes = require("../routes/getRoutes"); // GET 요청 라우터
-const db = require("./database"); // 데이터베이스 연결을 import
+const cors = require("cors"); 
+const postRoutes = require("../routes/postRoutes"); 
+const getPostRoutes = require("../routes/getRoutes"); 
+const db = require("./database"); 
 
 const app = express();
-const port = process.env.PORT || 8080; // 포트 번호를 환경 변수로부터 가져오기
+const port = process.env.PORT || 8080; 
 
-// CORS 설정
 app.use(cors());
 
-// 업로드 설정
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -26,10 +24,8 @@ const storage = multer.diskStorage({
   },
 });
 
-// 파일 필터 설정
 const fileFilter = (req, file, cb) => {
-  // 허용할 이미지 파일의 MIME 타입을 설정
-  const allowedTypes = /jpeg|jpg|png|gif|webp|bmp|tiff/; // 허용할 이미지 파일 확장자 추가
+  const allowedTypes = /jpeg|jpg|png|gif|webp|bmp|tiff/;
   const extname = allowedTypes.test(
     path.extname(file.originalname).toLowerCase()
   );
@@ -51,9 +47,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("./uploads"));
 
-// API 라우팅 설정
-app.use("/api/posts", upload.single("image"), postRoutes(db)); // POST 요청 처리
-app.use("/api/posts", getPostRoutes(db)); // GET 요청 처리
+app.use("/api/posts", upload.single("image"), postRoutes(db)); 
+app.use("/api/posts", getPostRoutes(db)); 
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
